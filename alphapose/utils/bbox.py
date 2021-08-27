@@ -202,6 +202,8 @@ def _box_to_center_scale(x, y, w, h, aspect_ratio=1.0, scale_mult=1.25):
     center = np.zeros((2), dtype=np.float32)
     center[0] = x + w * 0.5
     center[1] = y + h * 0.5
+    w = np.array(w)  # patch added to avoid floating point exception when dividing tensor by float
+    h = np.array(h)  # patch added to avoid floating point exception when dividing tensor by float
 
     if w > aspect_ratio * h:
         h = w / aspect_ratio

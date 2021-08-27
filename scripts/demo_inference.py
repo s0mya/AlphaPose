@@ -17,6 +17,7 @@ from trackers import track
 from alphapose.models import builder
 from alphapose.utils.config import update_config
 from alphapose.utils.detector import DetectionLoader
+from alphapose.utils.file_detector import FileDetectionLoader  # patch added so we can use a detection file
 from alphapose.utils.transforms import flip, flip_heatmap
 from alphapose.utils.vis import getTime
 from alphapose.utils.webcam_detector import WebCamDetectionLoader
@@ -194,7 +195,6 @@ if __name__ == "__main__":
         'pt': [],
         'pn': []
     }
-
     # Init data writer
     queueSize = 2 if mode == 'webcam' else args.qsize
     if args.save_video and mode != 'image':
