@@ -59,15 +59,15 @@ def validate(m, heatmap_to_coord, batch_size=20):
 
     for inps, crop_bboxes, bboxes, img_ids, scores, imghts, imgwds in tqdm(det_loader, dynamic_ncols=True):
         if isinstance(inps, list):
-            inps = [inp.cuda() for inp in inps]
+            inps = [inp.cpu() for inp in inps]
         else:
-            inps = inps.cuda()
+            inps = inps.cpu()
         output = m(inps)
         if opt.flip_test:
             if isinstance(inps, list):
-                inps_flip = [flip(inp).cuda() for inp in inps]
+                inps_flip = [flip(inp).cpu() for inp in inps]
             else:
-                inps_flip = flip(inps).cuda()
+                inps_flip = flip(inps).cpu()
             output_flip = flip_heatmap(m(inps_flip), det_dataset.joint_pairs, shift=True)
             pred_flip = output_flip[:, eval_joints, :, :]
         else:
@@ -118,15 +118,15 @@ def validate_gt(m, cfg, heatmap_to_coord, batch_size=20):
 
     for inps, labels, label_masks, img_ids, bboxes in tqdm(gt_val_loader, dynamic_ncols=True):
         if isinstance(inps, list):
-            inps = [inp.cuda() for inp in inps]
+            inps = [inp.cpu() for inp in inps]
         else:
-            inps = inps.cuda()
+            inps = inps.cpu()
         output = m(inps)
         if opt.flip_test:
             if isinstance(inps, list):
-                inps_flip = [flip(inp).cuda() for inp in inps]
+                inps_flip = [flip(inp).cpu() for inp in inps]
             else:
-                inps_flip = flip(inps).cuda()
+                inps_flip = flip(inps).cpu()
             output_flip = flip_heatmap(m(inps_flip), gt_val_dataset.joint_pairs, shift=True)
             pred_flip = output_flip[:, eval_joints, :, :]
         else:
@@ -165,7 +165,7 @@ if __name__ == "__main__":
     print(f'Loading model from {opt.checkpoint}...')
     m.load_state_dict(torch.load(opt.checkpoint))
 
-    m = torch.nn.DataParallel(m, device_ids=gpus).cuda()
+    m = torch.nn.DataParallel(m, device_ids=gpus).cpu()
     heatmap_to_coord = get_func_heatmap_to_coord(cfg)
 
     with torch.no_grad():

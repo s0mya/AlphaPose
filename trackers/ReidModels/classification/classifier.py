@@ -51,7 +51,7 @@ class PatchClassifier(object):
 
         net_utils.load_net(ckpt, model)
         model = model.eval()
-        self.model = model.cuda(self.gpu)
+        self.model = model.cpu(self.gpu)
         print('load cls model from: {}'.format(ckpt))
         self.score_map = None
         self.im_scale = 1.
@@ -83,10 +83,10 @@ class PatchClassifier(object):
         # forward
         if LooseVersion(torch.__version__) > LooseVersion('0.3.1'):
             with torch.no_grad():
-                im_var = Variable(im_data).cuda(self.gpu)
+                im_var = Variable(im_data).cpu(self.gpu)
                 self.score_map = self.model(im_var)
         else:
-            im_var = Variable(im_data, volatile=True).cuda(self.gpu)
+            im_var = Variable(im_data, volatile=True).cpu(self.gpu)
             self.score_map = self.model(im_var)
 
         return real_shape, im_scale

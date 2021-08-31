@@ -18,7 +18,7 @@ def load_reid_model():
     net_utils.load_net(ckpt, model)
     logger.info('Load ReID model from {}'.format(ckpt))
 
-    model = model.cuda()
+    model = model.cpu()
     model.eval()
     return model
 
@@ -48,6 +48,6 @@ def extract_reid_features(reid_model, image, tlbrs):
     with torch.no_grad():
         _img = torch.from_numpy(patches)
         if gpu:
-            _img = _img.cuda()
+            _img = _img.cpu()
         features,id = reid_model(_img).detach()
     return features

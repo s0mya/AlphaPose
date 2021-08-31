@@ -142,10 +142,10 @@ class YOLOLayer(nn.Module):
         # Training
         if targets is not None:
             if test_emb:
-                tconf, tbox, tids = build_targets_max(targets, self.anchor_vec.cuda(), self.nA, self.nC, nGh, nGw)
+                tconf, tbox, tids = build_targets_max(targets, self.anchor_vec.cpu(), self.nA, self.nC, nGh, nGw)
             else:
-                tconf, tbox, tids = build_targets_thres(targets, self.anchor_vec.cuda(), self.nA, self.nC, nGh, nGw)
-            tconf, tbox, tids = tconf.cuda(), tbox.cuda(), tids.cuda()
+                tconf, tbox, tids = build_targets_thres(targets, self.anchor_vec.cpu(), self.nA, self.nC, nGh, nGw)
+            tconf, tbox, tids = tconf.cpu(), tbox.cpu(), tids.cpu()
             mask = tconf > 0
 
             # Compute losses
@@ -158,7 +158,7 @@ class YOLOLayer(nn.Module):
                 FT = torch.cuda.FloatTensor if p_conf.is_cuda else torch.FloatTensor
                 lbox, lconf =  FT([0]), FT([0])
             lconf =  self.SoftmaxLoss(p_conf, tconf)
-            lid = torch.Tensor(1).fill_(0).squeeze().cuda()
+            lid = torch.Tensor(1).fill_(0).squeeze().cpu()
             emb_mask,_ = mask.max(1)
             
             # For convenience we use max(1) to decide the id, TODO: more reseanable strategy
@@ -170,7 +170,7 @@ class YOLOLayer(nn.Module):
             
             if  test_emb:
                 if np.prod(embedding.shape)==0  or np.prod(tids.shape) == 0:
-                    return torch.zeros(0, self. emb_dim+1).cuda()
+                    return torch.zeros(0, self. emb_dim+1).cpu()
                 emb_and_gt = torch.cat([embedding, tids.float()], dim=1)
                 return emb_and_gt
             
@@ -255,7 +255,7 @@ class Darknet(nn.Module):
         if is_training:
             self.losses['nT'] /= 3 
             output = [o.squeeze() for o in output]
-            return sum(output), torch.Tensor(list(self.losses.values())).cuda()
+            return sum(output), torch.Tensor(list(self.losses.values())).cpu()
         elif self.test_emb:
             return torch.cat(output, 0)
         return torch.cat(output, 1)

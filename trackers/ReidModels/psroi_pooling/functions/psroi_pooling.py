@@ -21,7 +21,7 @@ class PSRoIPoolingFunction(Function):
         num_rois = rois.size(0)
 
         output = features.new().resize_(num_rois, self.output_dim, self.pooled_height, self.pooled_width).zero_()
-        mappingchannel = torch.IntTensor(num_rois, self.output_dim, self.pooled_height, self.pooled_width).zero_().cuda(features.get_device())
+        mappingchannel = torch.IntTensor(num_rois, self.output_dim, self.pooled_height, self.pooled_width).zero_().cpu(features.get_device())
 
         rtn = psroi_pooling.psroi_pooling_forward_cuda(self.pooled_height, self.pooled_width, self.spatial_scale,
                                                  self.group_size, self.output_dim,
@@ -41,7 +41,7 @@ class PSRoIPoolingFunction(Function):
 
         batch_size, num_channels, data_height, data_width = self.feature_size
 
-        grad_input = torch.zeros(batch_size, num_channels, data_height, data_width).cuda()
+        grad_input = torch.zeros(batch_size, num_channels, data_height, data_width).cpu()
 
         psroi_pooling.psroi_pooling_backward_cuda(self.pooled_height, self.pooled_width, self.spatial_scale,
                                                   self.output_dim,

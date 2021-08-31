@@ -22,7 +22,7 @@ def get_test_input(input_dim, CUDA):
     img_ = Variable(img_)
     
     if CUDA:
-        img_ = img_.cuda()
+        img_ = img_.cpu()
     
     return img_
 
@@ -97,7 +97,7 @@ if __name__ == '__main__':
     assert inp_dim > 32
 
     if CUDA:
-        model.cuda()
+        model.cpu()
             
     model.eval()
     
@@ -120,8 +120,8 @@ if __name__ == '__main__':
             
             
             if CUDA:
-                im_dim = im_dim.cuda()
-                img = img.cuda()
+                im_dim = im_dim.cpu()
+                img = img.cpu()
             
             
             output = model(Variable(img), CUDA)

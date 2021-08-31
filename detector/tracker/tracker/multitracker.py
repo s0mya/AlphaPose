@@ -157,7 +157,7 @@ class JDETracker(object):
             else:
                 self.model.to(args.device)
         else:
-            self.model.cuda()
+            self.model.cpu()
         self.model.eval()
 
         self.tracked_stracks = []  # type: list[STrack]

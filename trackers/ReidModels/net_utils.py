@@ -54,7 +54,7 @@ def set_optimizer_state_devices(state, device_id=None):
                 if device_id is None:
                     v[k2] = v[k2].cpu()
                 else:
-                    v[k2] = v[k2].cuda(device_id)
+                    v[k2] = v[k2].cpu(device_id)
 
     return state
 

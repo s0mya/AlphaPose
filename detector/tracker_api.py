@@ -62,7 +62,7 @@ class Tracker(BaseDetector):
             else:
                 self.model.to(self.tracker_opt.device)
         else:
-            self.model.cuda()
+            self.model.cpu()
         self.model.eval()
         print("Network successfully loaded")
 
@@ -107,7 +107,7 @@ class Tracker(BaseDetector):
 
         ''' Step 1: Network forward, get detections & embeddings'''
         with torch.no_grad():
-            imgs = imgs.to(args.device) if args else imgs.cuda()
+            imgs = imgs.to(args.device) if args else imgs.cpu()
             pred = self.model(imgs)
 
         if len(pred) > 0:

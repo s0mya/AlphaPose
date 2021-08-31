@@ -23,7 +23,7 @@ def get_test_input(input_dim, CUDA):
     img_ = Variable(img_)
     
     if CUDA:
-        img_ = img_.cuda()
+        img_ = img_.cpu()
     
     return img_
 
@@ -107,7 +107,7 @@ if __name__ == '__main__':
 
     
     if CUDA:
-        model.cuda().half()
+        model.cpu().half()
         
     model(get_test_input(inp_dim, CUDA), CUDA)
 
@@ -133,8 +133,8 @@ if __name__ == '__main__':
             
             
             if CUDA:
-                img = img.cuda().half()
-                im_dim = im_dim.half().cuda()
+                img = img.cpu().half()
+                im_dim = im_dim.half().cpu()
                 write_results = write_results_half
                 predict_transform = predict_transform_half
             

@@ -33,11 +33,11 @@ def train(opt, train_loader, m, criterion, optimizer, writer):
 
     for i, (inps, labels, label_masks, _, bboxes) in enumerate(train_loader):
         if isinstance(inps, list):
-            inps = [inp.cuda().requires_grad_() for inp in inps]
+            inps = [inp.cpu().requires_grad_() for inp in inps]
         else:
-            inps = inps.cuda().requires_grad_()
-        labels = labels.cuda()
-        label_masks = label_masks.cuda()
+            inps = inps.cpu().requires_grad_()
+        labels = labels.cpu()
+        label_masks = label_masks.cpu()
 
         output = m(inps)
 
@@ -95,9 +95,9 @@ def validate(m, opt, heatmap_to_coord, batch_size=20):
 
     for inps, crop_bboxes, bboxes, img_ids, scores, imghts, imgwds in tqdm(det_loader, dynamic_ncols=True):
         if isinstance(inps, list):
-            inps = [inp.cuda() for inp in inps]
+            inps = [inp.cpu() for inp in inps]
         else:
-            inps = inps.cuda()
+            inps = inps.cpu()
         output = m(inps)
 
         pred = output
@@ -141,9 +141,9 @@ def validate_gt(m, opt, cfg, heatmap_to_coord, batch_size=20):
 
     for inps, labels, label_masks, img_ids, bboxes in tqdm(gt_val_loader, dynamic_ncols=True):
         if isinstance(inps, list):
-            inps = [inp.cuda() for inp in inps]
+            inps = [inp.cpu() for inp in inps]
         else:
-            inps = inps.cuda()
+            inps = inps.cpu()
         output = m(inps)
 
         pred = output
@@ -182,9 +182,9 @@ def main():
 
     # Model Initialize
     m = preset_model(cfg)
-    m = nn.DataParallel(m).cuda()
+    m = nn.DataParallel(m).cpu()
 
-    criterion = builder.build_loss(cfg.LOSS).cuda()
+    criterion = builder.build_loss(cfg.LOSS).cpu()
 
     if cfg.TRAIN.OPTIMIZER == 'adam':
         optimizer = torch.optim.Adam(m.parameters(), lr=cfg.TRAIN.LR)

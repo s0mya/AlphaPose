@@ -43,7 +43,7 @@ if __name__ == '__main__':
 
     #If there's a GPU availible, put the model on GPU
     if CUDA:
-        model.cuda()
+        model.cpu()
 
     #Set the model in evaluation mode
     model.eval()
@@ -63,13 +63,13 @@ if __name__ == '__main__':
     im_dim_list = torch.FloatTensor(im_dim_list).repeat(1, 2)
 
     if CUDA:
-        im_dim_list = im_dim_list.cuda()
+        im_dim_list = im_dim_list.cpu()
 
 
     for batch in im_batches:
         #load the image
         if CUDA:
-            batch = batch.cuda()
+            batch = batch.cpu()
         with torch.no_grad():
             prediction = model(Variable(batch), CUDA)
 

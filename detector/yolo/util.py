@@ -60,8 +60,8 @@ def predict_transform(prediction, inp_dim, anchors, num_classes, args):
         x_offset = x_offset.to(args.device)
         y_offset = y_offset.to(args.device)
     else:
-        x_offset = x_offset.cuda()
-        y_offset = y_offset.cuda()
+        x_offset = x_offset.cpu()
+        y_offset = y_offset.cpu()
     
     x_y_offset = torch.cat((x_offset, y_offset), 1).repeat(1,num_anchors).view(-1,2).unsqueeze(0)
     
@@ -73,7 +73,7 @@ def predict_transform(prediction, inp_dim, anchors, num_classes, args):
     if args:
         anchors = anchors.to(args.device)
     else:
-        anchors = anchors.cuda()
+        anchors = anchors.cpu()
     
     anchors = anchors.repeat(grid_size*grid_size, 1).unsqueeze(0)
     prediction[:,:,2:4] = torch.exp(prediction[:,:,2:4])*anchors
@@ -259,8 +259,8 @@ def predict_transform_half(prediction, inp_dim, anchors, num_classes, args):
         x_offset = x_offset.to(args.device).half()
         y_offset = y_offset.to(args.device).half()
     else:
-        x_offset = x_offset.cuda().half()
-        y_offset = y_offset.cuda().half()
+        x_offset = x_offset.cpu().half()
+        y_offset = y_offset.cpu().half()
     
     x_y_offset = torch.cat((x_offset, y_offset), 1).repeat(1,num_anchors).view(-1,2).unsqueeze(0)
     
@@ -272,7 +272,7 @@ def predict_transform_half(prediction, inp_dim, anchors, num_classes, args):
     if args:
         anchors = anchors.to(args.device)
     else:
-        anchors = anchors.cuda()
+        anchors = anchors.cpu()
     
     anchors = anchors.repeat(grid_size*grid_size, 1).unsqueeze(0)
     prediction[:,:,2:4] = torch.exp(prediction[:,:,2:4])*anchors

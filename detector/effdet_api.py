@@ -72,7 +72,7 @@ class EffDetDetector(BaseDetector):
                 self.model = amp.initialize(self.model, opt_level='O1')
             else:
                 print('AMP not installed, running network in FP32.')
-            self.model.cuda()
+            self.model.cpu()
 
         net.eval()
 
@@ -103,9 +103,9 @@ class EffDetDetector(BaseDetector):
         if not self.model:
             self.load_model()
         with torch.no_grad():
-            imgs = imgs.to(args.device) if args else imgs.cuda()
+            imgs = imgs.to(args.device) if args else imgs.cpu()
             scaling_factors = torch.FloatTensor([1./min(self.inp_dim / orig_dim[0], self.inp_dim / orig_dim[1]) for orig_dim in orig_dim_list]).view(-1, 1)
-            scaling_factors = scaling_factors.to(args.device) if args else scaling_factors.cuda()
+            scaling_factors = scaling_factors.to(args.device) if args else scaling_factors.cpu()
             prediction = self.model(imgs, scaling_factors) 
             #change the pred format to alphapose (nms has already been done in effdeteval model)
             prediction = prediction.cpu()
@@ -160,9 +160,9 @@ class EffDetDetector(BaseDetector):
         img, orig_img, img_dim_list = prep_image(img_name, self.inp_dim)
         with torch.no_grad():
             img_dim_list = torch.FloatTensor([img_dim_list]).repeat(1, 2)
-            img = img.to(args.device) if args else img.cuda()
+            img = img.to(args.device) if args else img.cpu()
             scaling_factor = torch.FloatTensor([1/min(self.inp_dim / orig_dim[0], self.inp_dim / orig_dim[1]) for orig_dim in img_dim_list]).view(-1, 1)
-            scaling_factor = scaling_factor.to(args.device) if args else scaling_factor.cuda()
+            scaling_factor = scaling_factor.to(args.device) if args else scaling_factor.cpu()
             prediction = self.model(img, scaling_factor) 
             #change the pred format to alphapose (nms has already been done in effdeteval model)
             prediction = prediction.cpu()
@@ -230,9 +230,9 @@ class EffDetDetector(BaseDetector):
         img, orig_img, img_dim_list = prep_image(img_name, self.inp_dim)
         with torch.no_grad():
             img_dim_list = torch.FloatTensor([img_dim_list]).repeat(1, 2)
-            img = img.to(args.device) if args else img.cuda()
+            img = img.to(args.device) if args else img.cpu()
             scaling_factor = torch.FloatTensor([1/min(self.inp_dim / orig_dim[0], self.inp_dim / orig_dim[1]) for orig_dim in img_dim_list]).view(-1, 1)
-            scaling_factor = scaling_factor.to(args.device) if args else scaling_factor.cuda()
+            scaling_factor = scaling_factor.to(args.device) if args else scaling_factor.cpu()
             output = self.model(img, scaling_factor) 
 
             output = output.cpu()

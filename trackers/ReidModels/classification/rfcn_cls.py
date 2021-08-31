@@ -91,7 +91,7 @@ class Model(nn.Module):
 
         _rois = np.zeros([n_rois, 5], dtype=np.float32)
         _rois[:, 1:5] = rois.astype(np.float32)
-        _rois = Variable(torch.from_numpy(_rois)).cuda(cls_feat.get_device())
+        _rois = Variable(torch.from_numpy(_rois)).cpu(cls_feat.get_device())
 
         cls_scores = self.psroipool_cls(cls_feat, _rois)
         cls_scores = self.avg_pool(cls_scores).view(-1)
