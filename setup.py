@@ -5,7 +5,7 @@ import time
 
 import numpy as np
 from Cython.Build import cythonize
-from setuptools import Extension, find_packages, setup
+from setuptools import Extension, find_packages,find_namespace_packages, setup
 from torch.utils.cpp_extension import BuildExtension, CUDAExtension
 
 MAJOR = 0
@@ -190,7 +190,7 @@ if __name__ == '__main__':
         long_description=readme(),
         keywords='computer vision, human pose estimation',
         url='https://github.com/MVIG-SJTU/AlphaPose',
-        packages=find_packages(exclude=('data', 'exp',)),
+        packages=find_namespace_packages(exclude=('data', 'exp',)),
         package_data={'': ['*.json', '*.txt']},
         classifiers=[
             'Development Status :: 4 - Beta',
